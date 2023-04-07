@@ -4,21 +4,33 @@ This repository contains a test suite class, DRS_Validator to check the complian
 
 The schemas used to validate DRS object endpoints are from the [**DRS Schemas Repository**](https://github.com/ga4gh/data-repository-service-schemas).
 
+1. [Quick Start](#quick-start)
+2. [Install](#install)
+    - [With Conda](#in-a-conda-env)
+    - [With pip](#with-pip)
+3. [Usage](#using-drs_validator)
+4. [Next Steps](#next-steps)
+5. [The DRS_Validator Class](#the-drs_validator-class)
+    - [Class Attributes](#class-attributes)
+    - [Instance Attributes](#instance-attributes)
+    - [Methods](#methods-in-drs_validator)
+6. [Other Scripts](#other-scripts)
+
 
 ## Quick Start
 Assuming you have setup the DRS Starter Kit and populated test data into it, you can replicate the present tests as follows:  
 ```
-git clone <this repo>
-cd <this repo>
+git clone https://github.com/bruhad-dave/drs-validator.git
+cd drs-validator
 pip install -r requirements.txt
 
-python DRS_Validator/validator_runner.py \
--s full/path/to/<this repo>/json_schema \
+python validator_runner.py \
+-s full/path/to/drs-validator/json_schema \
 -u http://localhost:5000/ga4gh/drs/v1/objects/ \
 -i full/path/to/<this repo>/test_objects.txt
 ```  
 
-`validator_runner.py` wraps around the class definition and works with comma-separated input files, which must contain three columns: object id, expected status code, and expected content type.  
+`validator_runner.py` wraps around the class definition and works with comma-separated input files, where the first two columns **must** contain the object id and expected status code.  
 
 Test results are printed to the terminal in the format:  
 ```
@@ -30,25 +42,23 @@ Test results are printed to the terminal in the format:
 
 ## Install
 
-DRS_Validator can be used without explicit installation via validator_runner.py as shown in [Quick Start](#quick-start). This is useful to run tests on several DRS objects from an input file as described above.  
+DRS_Validator can be used without explicit installation via `validator_runner.py` as shown in [Quick Start](#quick-start). This is useful to run tests on several DRS objects from an input file as described above, without making changes to your local environment.  
 
 DRS_Validator can be installed as follows, once the repo is pulled down with `git clone`.  
 
-### Install with conda
+### In a conda env
 ```
-cd <path/to/this_repo>
+cd <abs/path/to/drs-validator>
 conda env create -f env.yaml
 conda activate drs_endpoint_test
-
-python setup.py install
 ```
 
-### Install with pip
+### With pip
 ```
-cd <path/to/this_repo>
+cd <abs/path/to/drs-validator>
 pip install -r requirements.txt
 
-python setup.py install
+python setup.py install ## `pip install .` would also work
 ```  
 
 ## Using DRS_Validator
@@ -66,17 +76,27 @@ validator_instance = DRS_Validator(schema_dir, base_url)
 validator_instance.validate(object_id, expected_status_code)
 ```
 
-## DRS_Validator class
+## Next Steps
+
+DRS_Validator can be extended to:  
+    - add tests for object_id and URI compliance  
+    - add tests for requests that need authorization  
+    - add Code-202 schema  
+    - add tests for AccessURL methods  
+
+The code can also be packaged with Docker if complexity (in terms of code complexity itself or number of dependencies) increases. The current implementation is as barebones as possible so any user with a python installation can viably use it; it could be packaged as a conda recipe or to PyPI for one-step installation.  
+
+## The DRS_Validator class
 
 The class instantiates with two user-specified attributes, `base_url`, and `schema_dir` and takes the `object_id` and the expected HTTP status code to test the endpoint.  
 
 Three tests are run:  
 1. A GET request is sent and the status code received is checked against the expected code  
-2. The header of the GET response is read to ensure that the content-type is JSON  
-3. **IF** test 2 is passed, the response JSON is checked against the appropriate schema using `jsonschema`. The right schema is picked based on the status code received:  
+2. The header of the GET response is read to ensure that the content type is JSON  
+3. **IF** test 2 is passed, the response JSON is checked against the appropriate schema using `jsonschema`. The right schema is picked based on the status code received (this is based on [DRS docs](https://ga4gh.github.io/data-repository-service-schemas/preview/release/drs-1.2.0/docs/)):  
 
     - Status Code 200: DrsObject.json  
-    - Any 400/500 Status Codes: Error.json  
+    - 400/500 Status Codes: Error.json  
 
 If the GET response fails Tests 1 and 2, the expected and received status code/content-type are noted in the test results. If the GET response fails Test 3, a new file, `<object_id>.log`, is created in the working directory. This is where errors thrown by jsonschema are written for reference and to enable troubleshooting.  
 
@@ -97,7 +117,18 @@ If the GET response fails Tests 1 and 2, the expected and received status code/c
 - `schema`: the chosen schema  
 - `passed_schema_validation`: Result of Test 3 (bool)  
 
+### Methods in DRS_Validator
+- `validate_object_request(object_id, exp_status)`: can be used to ONLY run Tests 1 and 2
+- `validate_object_schema()`: can be used to run Test 3 (but requires that `validate_object_request` be called first)
+- `validate(object_id, exp_status)`: wraps around the two methods above; only calls `validate_object_schema()` if response content type is JSON
+
 ### Other Scripts  
+- `validator_runner.py`: Can be run to use DRS_Validator without installation; described above
+- usage:
+    ```
+    python validator_runner.py -s <abs/path/to/schema/dir> -u <base/url> -i <abs/path/to/input/csv>
+    ```
+
 - `yaml_to_json.py`: Convert schema from yaml to json.
 - usage:
     ```

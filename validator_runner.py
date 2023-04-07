@@ -15,6 +15,7 @@ input_file = args.input_file
 
 validator = DRS_Validator(schema_dir, args.base_url)
 data = pd.read_csv(input_file, sep = ",", header = 0)
+data = data.iloc[:, 0:2]
 for i in data.index:
-    object_id, exp_status, exp_type = data.loc[i].to_list()
+    object_id, exp_status = data.loc[i].to_list()
     validator.validate(object_id, exp_status)
