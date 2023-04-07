@@ -27,7 +27,7 @@ pip install -r requirements.txt
 python validator_runner.py \
 -s full/path/to/drs-validator/json_schema \
 -u http://localhost:5000/ga4gh/drs/v1/objects/ \
--i full/path/to/<this repo>/test_objects.txt
+-i full/path/to/drs-validator/test_objects.txt
 ```  
 
 `validator_runner.py` wraps around the class definition and works with comma-separated input files, where the first two columns **must** contain the object id and expected status code respectively. Note that the script expects there to be a header in the input file.  
@@ -107,7 +107,7 @@ If the GET response fails Tests 1 and 2, the expected and received status code/c
 ### Class Attributes  
 - `EXPECTED_CONTENT_TYPE`: value="application/json"; DRS endpoints are always JSON  
 - `OBJECT_SCHEMA_LOOKUP`: Dictionary with schema names as keys and lists of corresponding status codes as values  
-- `REPORT_FORMAT`: Template string for formatting test results that are printed to terminal  
+- `REPORT_TEMPLATE`: Template string for formatting test results that are printed to terminal  
 
 ### Instance Attributes  
 - `schema_dir`: is the path to a directory containing all (JSON) schema that are required to validate the response of the GET request made to `base_url`/`object_id`  
@@ -128,13 +128,21 @@ If the GET response fails Tests 1 and 2, the expected and received status code/c
 
 ### Other Scripts  
 - `validator_runner.py`: Can be run to use DRS_Validator without installation; described above
-- usage:
+- usage:  
     ```
     python validator_runner.py -s <abs/path/to/schema/dir> -u <base/url> -i <abs/path/to/input/csv>
     ```
+- options:  
+    - `-s`: Absolute path to directory containing JSON schemas
+    - `-u`: Base url to use as suffix for object ID in order to make GET requests
+    - `-i`: Path to comma-separated, headered input file, where column 1 contains object ids and column 2 contains corresponding expected status codes
 
-- `yaml_to_json.py`: Convert schema from yaml to json.
-- usage:
+
+- `yaml_to_json.py`: Convert schema from yaml to json. Also takes care of any schema references within a given schema file.  
+- usage:  
     ```
     python yaml_to_json.py -i <abs/path/to/dir/with/yaml_files> -o <abs/path/to/ouput dir>
     ```
+- options:  
+    - `-i`: Absolute path to directory containing schemas in YAML format
+    - `o`: Absolute path to dorectory where you'd like the converted JSON files to be written.
