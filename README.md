@@ -40,7 +40,7 @@ Test results are printed to the terminal in the format:
 "message" : "log message"}
 ```  
 
-See [below](#the-drs_validator-class) for descriptions of the tests and outcomes.
+See [below](#the-drs_validator-class) for more detailed descriptions of the tests and outcomes.
 
 ## Install
 
@@ -83,7 +83,6 @@ validator_instance.validate(object_id, expected_status_code)
 ## Next Steps
 
 DRS_Validator can be extended to:  
-
     - add tests for object_id and URI compliance  
     - add tests for requests that need authorization  
     - add Code-202 schema  
