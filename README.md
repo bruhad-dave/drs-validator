@@ -67,7 +67,7 @@ python setup.py install ## `pip install .` would also work
 
 ## Using DRS_Validator
 
-With a DRS starter kit deployed, DRS_Validator can be used programmatically by importing as:
+With a DRS starter kit deployed, and installation as above, DRS_Validator can be used programmatically by importing as:
 
 ```your_script.py
 from drs_validator.validator import DRS_Validator
