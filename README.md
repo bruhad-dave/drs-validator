@@ -1,6 +1,6 @@
 # DRS Endpoint Test Suite
 
-This repository is a submission for the GA4GH Developer Technical Interview. It contains a test suite class, DRS_Validator, that runs tests to check the compliance of DRS object endpoints returned by a GET request.  
+This repository is a submission for the GA4GH Developer technical assessment. It contains a test suite class, DRS_Validator, that runs tests to check the compliance of DRS object endpoints returned by a GET request.  
 
 The schemas used to validate DRS object endpoints are from the [**DRS Schemas Repository**](https://github.com/ga4gh/data-repository-service-schemas).
 
