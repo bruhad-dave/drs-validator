@@ -145,4 +145,4 @@ If the GET response fails Tests 1 and 2, the expected and received status code/c
     ```
 - options:  
     - `-i`: Absolute path to directory containing schemas in YAML format
-    - `o`: Absolute path to dorectory where you'd like the converted JSON files to be written.
+    - `-o`: Absolute path to dorectory where you'd like the converted JSON files to be written.
