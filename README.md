@@ -1,6 +1,6 @@
 # DRS Endpoint Test Suite
 
-This repository contains a test suite class, DRS_Validator to check the compliance of DRS objects returned by a GET request.  
+This repository is a submission for the GA4GH Developer Technical Interview. It contains a test suite class, DRS_Validator, that runs tests to check the compliance of DRS object endpoints returned by a GET request.  
 
 The schemas used to validate DRS object endpoints are from the [**DRS Schemas Repository**](https://github.com/ga4gh/data-repository-service-schemas).
 
@@ -30,7 +30,7 @@ python validator_runner.py \
 -i full/path/to/<this repo>/test_objects.txt
 ```  
 
-`validator_runner.py` wraps around the class definition and works with comma-separated input files, where the first two columns **must** contain the object id and expected status code.  
+`validator_runner.py` wraps around the class definition and works with comma-separated input files, where the first two columns **must** contain the object id and expected status code respectively. Note that the script expects there to be a header in the input file.  
 
 Test results are printed to the terminal in the format:  
 ```
@@ -39,6 +39,8 @@ Test results are printed to the terminal in the format:
 "pass" : "True/False", \
 "message" : "log message"}
 ```  
+
+See [below](#the-drs_validator-class) for descriptions of the tests and outcomes.
 
 ## Install
 
@@ -53,6 +55,8 @@ conda env create -f env.yaml
 conda activate drs_endpoint_test
 ```
 
+DRS_Validator is now ready to use programmatically in this conda env. To close the environment, run `conda deactivate`
+
 ### With pip
 ```
 cd <abs/path/to/drs-validator>
@@ -63,7 +67,7 @@ python setup.py install ## `pip install .` would also work
 
 ## Using DRS_Validator
 
-With a DRS starter kit deployed, DRS_Validator can be used in scripts by importing as:
+With a DRS starter kit deployed, DRS_Validator can be used programmatically by importing as:
 
 ```your_script.py
 from drs_validator.validator import DRS_Validator
@@ -79,12 +83,13 @@ validator_instance.validate(object_id, expected_status_code)
 ## Next Steps
 
 DRS_Validator can be extended to:  
+
     - add tests for object_id and URI compliance  
     - add tests for requests that need authorization  
     - add Code-202 schema  
     - add tests for AccessURL methods  
 
-The code can also be packaged with Docker if complexity (in terms of code complexity itself or number of dependencies) increases. The current implementation is as barebones as possible so any user with a python installation can viably use it; it could be packaged as a conda recipe or to PyPI for one-step installation.  
+The code can also be packaged with Docker if needed or if its complexity or the number of dependencies increases. The current implementation is as barebones as possible so any user with a python installation can viably use it; it could also be packaged as a conda recipe or to PyPI for one-step installation.  
 
 ## The DRS_Validator class
 
